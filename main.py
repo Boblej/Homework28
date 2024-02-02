@@ -1,33 +1,66 @@
-# задача
-# Определите класс Task с атрибутами title и status (например, "в процессе" или "завершено") и методом display_info(), который выводит информацию о задаче.
-# Создайте дочерний класс AssignedTask, который наследует от класса Task. Добавьте атрибут assignee (назначенный сотрудник) и метод assign_task(employee), который принимает объект сотрудника и назначает ему задачу.
+class Contact():
 
-class Task:
-    def __init__(self, title, status):
-        self.title = title
-        self.status = status
+    def __init__(self, name, phone):
+        self.name = name
+        self.phone = phone
+
 
     def display(self):
-        print(f'задача: {self.title}')
-        print(f'статус: {self.status}')
+        print(f'name: {self.name}, phone: {self.phone}')
 
+class BusinessContact(Contact):
 
-class AssignedTask(Task):
-    def __init__(self, title, status, assignee=None):
-        super().__init__(title, status)
-        self.assignee = assignee
+    def __init__(self, name, phone, company):
+        super().__init__(name, phone)
+        self.company = company
 
-    def assigntask(self, employee):
-        self.assignee = employee
-        print(f'задача: {self.title}, назначено сотруднику: {self.assignee.name}')
+    def display(self):
+        return super().display()
+        print(f'Компания: {self.company}')
 
+class PhoneBook:
 
-class Employee:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
+        self.contacts = []
 
+    def add_contact(self, contact):
+        self.contacts.append(contact)
 
-employee1 = Employee('анатолий')
-task1 = AssignedTask('придумать новый способ кладки кирпича', 'в процессе')
-task1.assigntask(employee1)
-task1.display()
+    def display_contact(self):
+        for contact in self.contacts:
+            contact.display()
+
+    def search_contact(self, name):
+        for contact in self.contacts:
+            if contact.name == name:
+                return contact
+        return None
+
+    def delete_contact(self, name):
+        contact = self.search_contact(name)
+        if contact:
+            self.contacts.remove(contact)
+        else:
+            print(f"Контакт с именем {name} не найден")
+
+    def edit_contact(self, name, **kwargs):
+        contact = self.search_contact(name)
+        if contact:
+            for key, value in kwargs.items():
+                setattr(contact, key, value)
+        else:
+            print(f"Контакт с именем {name} не найден")
+
+phone_book = PhoneBook()
+
+contact1 = Contact('artyom', 88005553535)
+businesscontact = BusinessContact('dmitry nagiev', 87777777777, 'mtc')
+phone_book.add_contact(contact1)
+phone_book.add_contact(businesscontact)
+phone_book.display_contact()
+
+phone_book.edit_contact('artyom', phone=99999999999)
+phone_book.display_contact()
+
+phone_book.delete_contact('dmitry nagiev')
+phone_book.display_contact()
